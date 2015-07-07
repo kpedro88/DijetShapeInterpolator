@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-import sys, os, string, copy
+import sys
 from argparse import ArgumentParser
 from array import array
 import numpy as np

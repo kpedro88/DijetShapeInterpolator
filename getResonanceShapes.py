@@ -19,6 +19,10 @@ class ShapeStorage:
         nbins = []
         nbins.append(len(self.binxcenters))
         for key in self.shapes.keys():
+            norm = sum(self.shapes[key])
+            if abs(norm - 1.) > 0.01:
+                print "Input shape for m =", key, "GeV not normalized. Make sure the input shapes are normalized to unity. Aborting."
+                sys.exit(3)
             nbins.append(len(self.shapes[key]))
         if len(set(nbins)) > 1:
            print "Numbers of bins for different input shapes and the number of bin centers are not all identical. Aborting."

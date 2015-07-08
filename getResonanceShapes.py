@@ -144,10 +144,6 @@ def main():
         4686, 4869, 5058, 5253, 5455, 5663, 5877, 6099, 6328, 6564, 6808, 7060, 7320, 7589, 7866, 8152, 8447, 8752, 9067, 9391, 9726, 10072, 10430, 
         10798, 11179, 11571, 11977, 12395, 12827, 13272, 13732, 14000]
 
-    # if using fine, 1-GeV binning
-    if args.fineBinning:
-        binBoundaries = range(1,14001,1)
-
     # initialize shape storage
     shapes = ShapeStorage(input_shapes.shapes,input_shapes.binxcenters,binBoundaries)
 
@@ -175,7 +171,7 @@ def main():
 
        histname = "h_" + args.final_state + "_" + str(int(mass))
 
-       h_shape = TH1D(histname, args.final_state + " Resonance Shape", len(shapes.binBoundaries)-1, array('d',shapes.binBoundaries))
+       h_shape = ( TH1D(histname, args.final_state + " Resonance Shape", 14000, 0, 14000) if args.fineBinning else TH1D(histname, args.final_state + " Resonance Shape", len(shapes.binBoundaries)-1, array('d',shapes.binBoundaries)) )
        h_shape.SetXTitle("Dijet Mass [GeV]")
        h_shape.SetYTitle("Probability")
 

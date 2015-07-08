@@ -14,18 +14,18 @@ class ShapeStorage:
         self.binBoundaries = binBoundaries
 
         if len(self.shapes) < 2:
-           print "Need at least 2 input shapes, %i provided. Aborting."%(len(self.shapes))
+           print "** ERROR: ** Need at least 2 input shapes, %i provided. Aborting."%(len(self.shapes))
            sys.exit(1)
         nbins = []
         nbins.append(len(self.binxcenters))
         for key in self.shapes.keys():
             norm = sum(self.shapes[key])
             if abs(norm - 1.) > 0.01:
-                print "Input shape for m =", key, "GeV not normalized. Make sure the input shapes are normalized to unity. Aborting."
+                print "** ERROR: ** Input shape for m =", key, "GeV not normalized. Make sure the input shapes are normalized to unity. Aborting."
                 sys.exit(3)
             nbins.append(len(self.shapes[key]))
         if len(set(nbins)) > 1:
-           print "Numbers of bins for different input shapes and the number of bin centers are not all identical. Aborting."
+           print "** ERROR: ** Numbers of bins for different input shapes and the number of bin centers are not all identical. Aborting."
            sys.exit(2)
 
 
@@ -161,6 +161,8 @@ def main():
     else:
         masses = args.mass
 
+    # sort masses
+    masses.sort()
 
     # output ROOT file
     output = TFile(args.output_file,"RECREATE")

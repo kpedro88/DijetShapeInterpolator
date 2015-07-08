@@ -89,7 +89,7 @@ def LineShapePDF(shapes, mass, histo):
 
 def main():
     # usage description
-    usage = "Example: ./getResonanceShapes.py -i input_shapes_qq_13TeV_PU20_Phys14.py -f qq --massrange 400 10000 100 -o ResonanceShapes_qq_13TeV_PU20_Phys14.root"
+    usage = "Example: ./getResonanceShapes.py -i inputs/input_shapes_qq_13TeV_PU20_Phys14.py -f qq --massrange 400 10000 100 -o ResonanceShapes_qq_13TeV_PU20_Phys14.root"
 
     # input parameters
     parser = ArgumentParser(description='Resonance shape interpolation code based on vertical template morphing',epilog=usage)

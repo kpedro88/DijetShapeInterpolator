@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-import sys
+import sys, os
 from argparse import ArgumentParser
 from array import array
 import numpy as np
@@ -135,7 +135,9 @@ def main():
     from ROOT import TFile, TH1D
 
     # input shapes
-    input_shapes = __import__(args.input_shapes.replace(".py",""))
+    sys.path.insert(0, os.path.dirname(args.input_shapes))
+
+    input_shapes = __import__(os.path.basename(args.input_shapes).replace(".py",""))
 
     # standard dijet mass binning
     binBoundaries = [1, 3, 6, 10, 16, 23, 31, 40, 50, 61, 74, 88, 103, 119, 137, 156, 176, 197, 220, 244, 270, 296, 325,

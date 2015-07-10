@@ -8,10 +8,9 @@ import numpy as np
 
 # class storing input shape info
 class ShapeStorage:
-    def __init__(self, shapes, binxcenters, binBoundaries):
+    def __init__(self, shapes, binxcenters):
         self.shapes = shapes
         self.binxcenters = binxcenters
-        self.binBoundaries = binBoundaries
 
         if len(self.shapes) < 2:
            print "** ERROR: ** Need at least 2 input shapes, %i provided. Aborting."%(len(self.shapes))
@@ -147,7 +146,7 @@ def main():
         10798, 11179, 11571, 11977, 12395, 12827, 13272, 13732, 14000]
 
     # initialize shape storage
-    shapes = ShapeStorage(input_shapes.shapes,input_shapes.binxcenters,binBoundaries)
+    shapes = ShapeStorage(input_shapes.shapes,input_shapes.binxcenters)
 
     # mass points for which resonance shapes will be produced
     masses = []
@@ -175,7 +174,7 @@ def main():
 
        histname = "h_" + args.final_state + "_" + str(int(mass))
 
-       h_shape = ( TH1D(histname, args.final_state + " Resonance Shape", 14000, 0, 14000) if args.fineBinning else TH1D(histname, args.final_state + " Resonance Shape", len(shapes.binBoundaries)-1, array('d',shapes.binBoundaries)) )
+       h_shape = ( TH1D(histname, args.final_state + " Resonance Shape", 14000, 0, 14000) if args.fineBinning else TH1D(histname, args.final_state + " Resonance Shape", len(binBoundaries)-1, array('d',binBoundaries)) )
        h_shape.SetXTitle("Dijet Mass [GeV]")
        h_shape.SetYTitle("Probability")
 

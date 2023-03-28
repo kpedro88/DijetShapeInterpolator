@@ -2,7 +2,7 @@
 
 from argparse import ArgumentParser
 import numpy as np
-
+from collections import defaultdict
 
 def main():
     # usage description
@@ -24,13 +24,13 @@ def main():
 
     args = parser.parse_args()
 
-    shapes = {}
+    shapes = defaultdict(dict)
     binxcenters = []
 
     # import ROOT stuff
     from ROOT import TFile, TH1F, TH1D
     # open input file
-    input_file = TFile(args.input_file)
+    input_file = TFile.Open(args.input_file)
 
     directory = input_file
     if args.dir != '':
@@ -42,9 +42,12 @@ def main():
     # loop over histograms in the input ROOT file
     for h in range(0, nEntries):
         hName = directory.GetListOfKeys()[h].GetName()
-        mass = int(hName.split('_')[3].replace('M',''))
+        if "widejetmassrel" not in hName: continue
+        mZprime = int(hName.split('_')[2])
+        param_region = '_'.join(hName.split('_')[3:])
+        param_region = param_region.replace(".","")
 
-        if args.debug: print "Extracting shapes for m =", mass, "GeV..."
+        if args.debug: print "Extracting shapes for m =", mZprime, "GeV for", param_region, "..."
 
         histo = directory.Get(hName)
 
@@ -58,20 +61,13 @@ def main():
         normbincontents = np.array(bincontents)
         normbincontents = normbincontents/np.sum(normbincontents)
 
-        shapes[mass] = normbincontents.tolist()
+        shapes[param_region][mZprime] = normbincontents.tolist()
 
-    if args.debug: print ""
-    if args.debug: print "Extracted shapes:"
-    if args.debug: print ""
-    print "shapes = {\n"
-    for key, value in sorted(shapes.items()):
-        print("  {} : {},".format(key, value))
-        print ""
-    print "}"
-    print ""
-    print "binxcenters =", binxcenters
-    print ""
-
+    for param_region, shape in shapes.iteritems():
+        with open("inputs/input_shapes_svj_{}.py".format(param_region),'w') as ofile:
+            ofile.write("shapes = "+repr(shape))
+            ofile.write("\n\n")
+            ofile.write("binxcenters = "+repr(binxcenters))
 
 if __name__ == '__main__':
     main()

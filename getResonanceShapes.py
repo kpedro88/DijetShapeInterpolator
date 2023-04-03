@@ -105,6 +105,14 @@ def main():
                         help="Final state (e.g. qq, qg, gg)",
                         metavar="FINAL_STATE")
 
+    parser.add_argument("-t", "--test", dest="test", default=None, type=int,
+                        help="Remove a known mass value from input shapes to test interpolation",
+                        metavar="TEST")
+
+    parser.add_argument("-x", "--suffix", dest="suffix", default="", type=str,
+                        help="Suffix for histogram names",
+                        metavar="SUFFIX")
+
     parser.add_argument("--fineBinning", dest="fineBinning", default=False, action="store_true", help="Use fine, 1-GeV binning")
 
     parser.add_argument("--storePDF", dest="storePDF", default=False, action="store_true", help="Also store a 1-GeV-binned PDF")
@@ -137,6 +145,10 @@ def main():
     sys.path.insert(0, os.path.dirname(args.input_shapes))
 
     input_shapes = __import__(os.path.basename(args.input_shapes).replace(".py",""))
+
+    # test case: remove a known mass
+    if args.test is not None:
+        input_shapes.shapes.pop(args.test)
 
     # standard dijet mass binning
     binBoundaries = [1, 3, 6, 10, 16, 23, 31, 40, 50, 61, 74, 88, 103, 119, 137, 156, 176, 197, 220, 244, 270, 296, 325,
@@ -173,6 +185,7 @@ def main():
        print "Producing %s shape for m = %i GeV"%(args.final_state, int(mass))
 
        histname = "h_" + args.final_state + "_" + str(int(mass))
+       if len(args.suffix)>0: histname = histname + "_" + args.suffix
 
        h_shape = ( TH1D(histname, args.final_state + " Resonance Shape", 14000, 0, 14000) if args.fineBinning else TH1D(histname, args.final_state + " Resonance Shape", len(binBoundaries)-1, array('d',binBoundaries)) )
        h_shape.SetXTitle("Dijet Mass [GeV]")
